@@ -37,10 +37,7 @@ async function ensureTable(db) {
 export default async (req, context) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
 
-  const user = context.clientContext?.user;
-  if (!user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: CORS });
-
-  const userId = user.sub;
+  const userId = "default-user";
   const url = new URL(req.url);
   const appId = url.searchParams.get("id");
 

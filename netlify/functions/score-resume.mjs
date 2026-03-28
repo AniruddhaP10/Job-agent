@@ -9,9 +9,6 @@ const CORS = {
 export default async (req, context) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
 
-  const user = context.clientContext?.user;
-  if (!user) return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: CORS });
-
   try {
     const { resume, jobDescription } = await req.json();
 

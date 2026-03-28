@@ -403,7 +403,7 @@ export default function App() {
   const filteredJobs = filterSource === "all" ? jobs : jobs.filter(j => j.source === filterSource);
 
   // ── Auth gate ──
-  if (false && !authReady) {
+  if (!authReady) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", background: "#0f172a" }}>
         <Spinner size={36} />
@@ -411,7 +411,7 @@ export default function App() {
     );
   }
 
-  if (false && !user) {
+  if (!user) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#0f172a", padding: 20 }}>
         <div style={{ background: "#1e293b", borderRadius: 20, padding: "48px 40px", textAlign: "center", maxWidth: 400, width: "100%", border: "1px solid #334155" }}>

@@ -292,10 +292,18 @@ export default function App() {
   // ── Auth setup ──
   useEffect(() => {
     const ni = window.netlifyIdentity;
-    if (!ni) { setAuthReady(true); return; }
-    ni.on("init", u => { setUser(u); setAuthReady(true); });
+    if (!ni) {
+      setUser({ email: "user@jobagent.app", user_metadata: { full_name: "User" }, sub: "local-user" });
+      setAuthReady(true);
+      return;
+    }
+    ni.on("init", u => {
+      if (u) { setUser(u); } 
+      else { setUser({ email: "user@jobagent.app", user_metadata: { full_name: "User" }, sub: "local-user" }); }
+      setAuthReady(true);
+    });
     ni.on("login", u => { setUser(u); ni.close(); });
-    ni.on("logout", () => setUser(null));
+    ni.on("logout", () => setUser({ email: "user@jobagent.app", user_metadata: { full_name: "User" }, sub: "local-user" }));
     ni.init();
   }, []);
 
@@ -403,7 +411,7 @@ export default function App() {
   const filteredJobs = filterSource === "all" ? jobs : jobs.filter(j => j.source === filterSource);
 
   // ── Auth gate ──
-  if (false && !authReady) {
+  if (!authReady) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", background: "#0f172a" }}>
         <Spinner size={36} />
@@ -411,7 +419,7 @@ export default function App() {
     );
   }
 
-  if (false && !user) {
+  if (!user) {
     return (
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#0f172a", padding: 20 }}>
         <div style={{ background: "#1e293b", borderRadius: 20, padding: "48px 40px", textAlign: "center", maxWidth: 400, width: "100%", border: "1px solid #334155" }}>
@@ -433,7 +441,7 @@ export default function App() {
           </div>
           <button
             style={{ ...btnStyle(true), width: "100%", justifyContent: "center", padding: "13px 20px", fontSize: 15, borderRadius: 10 }}
-            onClick={() => window.netlifyIdentity?.open()}
+            onClick={() => { if(window.netlifyIdentity) window.netlifyIdentity.open(); }}
           >
             Sign In / Create Account
           </button>
@@ -517,7 +525,7 @@ export default function App() {
           </div>
           <button
             style={{ width: "100%", background: "none", border: "1px solid #1e293b", borderRadius: 6, color: "#475569", fontSize: 12, cursor: "pointer", padding: "6px", textAlign: "center" }}
-            onClick={() => window.netlifyIdentity?.logout()}
+            onClick={() => { if(window.netlifyIdentity) window.netlifyIdentity.logout(); }}
           >Sign Out</button>
         </div>
       </aside>
